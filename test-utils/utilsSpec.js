@@ -74,11 +74,12 @@ describe( 'Utils', () => {
         expect( Utils.isAnyMoneyLeft ).not.eq( undefined );
       });
       it( 'returns "true" if there is enough amount from the total', () => {
+        stateLess.totalMoney = 300;
         const withdraw = 250;
         expect( Utils.isAnyMoneyLeft( stateLess.totalMoney, withdraw )).to.eq( true );
       });
       it( 'returns "false" if there is not enough amount from the total', () => {
-        stateLess.totalMoney = 300;
+        stateLess.totalMoney = 200;
         const withdraw = 250;
         expect( Utils.isAnyMoneyLeft( stateLess.totalMoney, withdraw )).to.eq( false );
       });

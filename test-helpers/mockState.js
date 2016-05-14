@@ -56,7 +56,7 @@ module.exports = {
             count: 10
           },
           20: {
-            count: 320
+            count: 20
           },
           10: {
             count: 20
