@@ -1,0 +1,39 @@
+{
+  "name": "atmMachine",
+  "version": "1.0.0",
+  "description": "Case study for new joiners, creation of an ATM machine",
+  "private": true,
+  "scripts": {
+    "build": "nwb build",
+    "clean": "nwb clean",
+    "start": "nwb serve",
+    "test-utils": "mocha --compilers js:babel-core/register test-utils/*.js",
+    "test-utils:watch": "mocha --watch --compilers js:babel-core/register test-utils/*.js"
+  },
+  "dependencies": {
+    "babel-core": "5.8.34",
+    "common-accessible-components": "^1.0.7",
+    "history": "^2.0.1",
+    "lodash-fp": "^0.10.4",
+    "react": "0.14.x",
+    "react-dom": "0.14.x",
+    "react-router": "^2.0.1"
+  },
+  "devDependencies": {
+    "babel-eslint": "^5.0.0",
+    "chai": "^3.5.0",
+    "eslint": "^2.4.0",
+    "eslint-config-airbnb": "^6.2.0",
+    "eslint-plugin-mocha": "^2.0.0",
+    "eslint-plugin-react": "^4.2.3",
+    "mocha": "^2.4.5",
+    "nwb": "0.8.x",
+    "react-addons-test-utils": "^0.14.7",
+    "skin-deep": "^0.16.0"
+  },
+  "author": "Deloitte Digital",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DeloitteDigitalUK/atm-case-study.git"
+  }
+}
