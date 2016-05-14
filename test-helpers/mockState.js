@@ -4,7 +4,7 @@ module.exports = {
   mockState() {
     return {
       maxWithdraw: 300,
-      minWithdraw: 0,
+      minWithdraw: 10,
       user: {
         accountBalance: 485.22,
         name: 'John Toe'
