@@ -61,6 +61,17 @@ const Utils = {
    *
    */
   areAnyNotesLeft( withdraw, notesContainer ) {
+    for(  let i=0; i < (notesContainer[50].count + 1); i++){
+      for(  let j=0; j < (notesContainer[20].count + 1); j++){
+        for(  let k=0; k < (notesContainer[10].count + 1); k++){
+
+          if( (i*50 + j*20 + k*10) === withdraw){
+            return true;
+          }
+        }
+      }
+    }
+    return false;
   },
 
   /** TODO Implement this method
@@ -80,6 +91,10 @@ const Utils = {
    */
   calculateCountNotes( withdraw, props ) {
   },
+
+
+
+
 
   /**
    * subtractCountFromTotal - subtracts the needed count of notes from the initial amount of notes
