@@ -180,10 +180,10 @@ export default class Atm extends Component {
        * The order of the conditions inside this array could change
        * to get the correct validation
        */
-      // {
-      //   condition: !Utils.areAnyNotesLeft( withdraw, notesContainer ),
-      //   message: 'notesAvailability'
-      // },
+      {
+        condition: !Utils.areAnyNotesLeft( withdraw, notesContainer ),
+        message: 'notesAvailability'
+      },
       {
         condition: !Utils.isAnyMoneyLeft( accountBalance, amount ),
         message: 'balanceError',

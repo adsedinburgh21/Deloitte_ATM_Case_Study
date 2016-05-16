@@ -89,12 +89,61 @@ const Utils = {
    * "./src/components/atm.js" is the parent component for this React app,
    * there you can understand more how this app works.
    */
+
+/*******************************************************************************
+FROM THE TESTS IN utilsSpec.js THE BANK NOTES SEEM TO DISPENSE IN ORDER - THE ATM DISPENSES A 50, THEN A 20, THEN A 10 THEN LOOPS BACK THROUGH THIS ORDER. DOESNT SEEM OPTIMAL - EG. CONSIDER IF £60 WITHDRAW REQUEST AND NO £10s LEFT IN ATM: IT WOULD GIVE A 50 THEN COULDNT GIVE REMAINING 10 - BUT IF HADNT DIPSENSED A 50, IT COULD HAVE DIPSENSED 3 x 20s .
+I have chosen to dispense a combination of notes that has at least 1 of every note type (50, 20, 10) whilst giving the least amount of small notes as possible. If a combination containing all 3 note types is not available then the ATM will dispense a combination that contains 2 note types, again giving the least amount of small notes as possible. Failing this, the final option is to dispense using only 1 note type.
+I have added an exception to this rule when dispensing £50. A £50 withdraw request will dispense as a single £50 note as in line with the tests in utilsSpec.js. Also, I thought dispensing a single £50 note for this scenario may help to better manage the stock of notes in the ATM. However, should it be decided that this is not required (perhaps providing smaller denomination of notes to the customer could increase customer satisfaction), then the if statement (lines 127-129) can be removed and a request to withdraw £50 would then subsequently return 2x£20 and 1x£10.
+********************************************************************************/
+
   calculateCountNotes( withdraw, props ) {
+    var possibleNoteCombinations = [];
+    var i, j, k;
+    for( i=0; i < (props.atmData.notesContainer[50].count + 1); i++){
+      for( j=0; j < (props.atmData.notesContainer[20].count + 1); j++){
+        for( k=0; k < (props.atmData.notesContainer[10].count + 1); k++){
+          if( (i*50 + j*20 + k*10) === withdraw){
+            possibleNoteCombinations.push( 
+              { 50: { count: i }, 20: { count: j }, 10: { count: k } }
+            );
+          };
+        };
+      };
+    };
+    var threeNoteCombinations = possibleNoteCombinations.filter(function(notesCombination){
+      if( notesCombination[50].count > 0 && notesCombination[20].count > 0 && notesCombination[10].count > 0){
+        return notesCombination;
+      }
+    });
+    var twoNoteCombinations = possibleNoteCombinations.filter(function(notesCombination){
+      if( (notesCombination[50].count > 0 && notesCombination[20].count > 0 && notesCombination[10].count === 0)
+        || (notesCombination[50].count > 0 && notesCombination[10].count > 0 && notesCombination[20].count === 0)
+        || (notesCombination[20].count > 0 && notesCombination[10].count > 0 && notesCombination[50].count === 0) 
+        ){
+        return notesCombination;
+      }
+    });
+
+    if( (props.atmData.notesContainer[50].count > 0) && (withdraw/50 === 1) ){
+      return {50:{count: 1}, 20:{count: 0}, 10:{count: 0} }
+    }
+    if( threeNoteCombinations.length > 0){
+      var dispenseThreeTypes = _.sortBy(threeNoteCombinations, function(collectionOfNotes) {
+        return [collectionOfNotes[50].count, collectionOfNotes[20].count, collectionOfNotes[10].count];
+      });
+      return dispenseThreeTypes[dispenseThreeTypes.length-1];
+    }
+    else if( twoNoteCombinations.length > 0){
+      var dispenseTwoTypes = _.sortBy(twoNoteCombinations, function(combination){
+        return [combination[50].count, combination[20].count, combination[10].count];
+      });
+      return dispenseTwoTypes[dispenseTwoTypes.length-1];
+    }
+    else{
+      return possibleNoteCombinations[0];
+    }
+
   },
-
-
-
-
 
   /**
    * subtractCountFromTotal - subtracts the needed count of notes from the initial amount of notes
