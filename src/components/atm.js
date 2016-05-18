@@ -61,6 +61,7 @@ export default class Atm extends Component {
     }
 
     const newBalance = this.state.user.accountBalance - amountToNumber;
+    //  below - immutability helpers so dont mutate this.state directly
     const newState = React.addons.update( this.state, {
       user: {
         accountBalance: { $set: newBalance }
@@ -250,6 +251,7 @@ export default class Atm extends Component {
    * @return {Object} - New Component's state
    */
   calculateWithdrawnNotes( withdraw, props ) {
+    console.log("here!")
     const withdrawnNotes = Utils.calculateCountNotes( withdraw, props );
     const availableNotes = props.atmData.notesContainer;
 

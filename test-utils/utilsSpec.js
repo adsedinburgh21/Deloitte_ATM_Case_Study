@@ -106,7 +106,7 @@ describe( 'Utils', () => {
         expect( Utils.areAnyNotesLeft ).not.eq( undefined );
       });
       it( 'returns true when requested withdrawal value can be dispensed using a combination of the available notes in the ATM', ()=>{
-        expect( Utils.areAnyNotesLeft( 70, notesContainer)).to.eq(true);
+        expect( Utils.areAnyNotesLeft( {value: 70}, notesContainer)).to.eq(true);
       });
       it( 'returns false when the ATM does not contain the correct combination of notes to be able to dipense the requested withdrawal value', ()=>{
         notesContainer[ '20' ].count = 0;

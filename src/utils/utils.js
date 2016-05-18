@@ -61,13 +61,12 @@ const Utils = {
    *
    */
   areAnyNotesLeft( withdraw, notesContainer ) {
-    for(  let i=0; i < (notesContainer[50].count + 1); i++){
-      for(  let j=0; j < (notesContainer[20].count + 1); j++){
-        for(  let k=0; k < (notesContainer[10].count + 1); k++){
-
-          if( (i*50 + j*20 + k*10) === withdraw){
+    for(  let i=0; i <= notesContainer[50].count; i++){
+      for(  let j=0; j <= notesContainer[20].count; j++){
+        for(  let k=0; k <= notesContainer[10].count; k++){
+          if( i*50 + j*20 + k*10 === parseInt(withdraw.value) ){
             return true;
-          }
+          };
         }
       }
     }
@@ -91,9 +90,9 @@ const Utils = {
    */
 
 /*******************************************************************************
-FROM THE TESTS IN utilsSpec.js THE BANK NOTES SEEM TO DISPENSE IN ORDER - THE ATM DISPENSES A 50, THEN A 20, THEN A 10 THEN LOOPS BACK THROUGH THIS ORDER. DOESNT SEEM OPTIMAL - EG. CONSIDER IF £60 WITHDRAW REQUEST AND NO £10s LEFT IN ATM: IT WOULD GIVE A 50 THEN COULDNT GIVE REMAINING 10 - BUT IF HADNT DIPSENSED A 50, IT COULD HAVE DIPSENSED 3 x 20s .
-I have chosen to dispense a combination of notes that has at least 1 of every note type (50, 20, 10) whilst giving the least amount of small notes as possible. If a combination containing all 3 note types is not available then the ATM will dispense a combination that contains 2 note types, again giving the least amount of small notes as possible. Failing this, the final option is to dispense using only 1 note type.
-I have added an exception to this rule when dispensing £50. A £50 withdraw request will dispense as a single £50 note as in line with the tests in utilsSpec.js. Also, I thought dispensing a single £50 note for this scenario may help to better manage the stock of notes in the ATM. However, should it be decided that this is not required (perhaps providing smaller denomination of notes to the customer could increase customer satisfaction), then the if statement (lines 127-129) can be removed and a request to withdraw £50 would then subsequently return 2x£20 and 1x£10.
+FROM THE TESTS IN utilsSpec.js THE BANK NOTES SEEM TO DISPENSE IN ORDER - THE ATM DISPENSES A 50, THEN A 20, THEN A 10 THEN LOOPS BACK THROUGH THIS ORDER. DOESNT SEEM OPTIMAL - EG. CONSIDER IF £60 WITHDRAW REQUEST AND NO £10s LEFT IN ATM: IT WOULD GIVE A 50 THEN COULDNT GIVE REMAINING 10 - BUT IF HADNT DIPSENSED A 50, IT COULD HAVE DIPSENSED 3 x 20s.
+I have chosen to dispense a combination of notes that has at least 1 of every note type (50, 20, 10) whilst giving the least amount of small notes as possible. If a combination containing all 3 note types is not available then the ATM will dispense a combination that contains 2 note types, again giving the least amount of small notes as possible. Failing this, the final option is to dispense the combination that is made from only 1 note type.
+I have added an exception to this rule when dispensing £50. A £50 withdraw request will dispense as a single £50 note as in line with the tests in utilsSpec.js. Also, I thought dispensing a single £50 note for this scenario may help to better manage the stock of notes in the ATM. However, should it be decided that this is not required (perhaps providing a smaller denomination of notes to the customer could increase customer satisfaction), then the if statement (lines 127-129) can be removed and a request to withdraw £50 would then subsequently return 2x£20 and 1x£10.
 ********************************************************************************/
 
   calculateCountNotes( withdraw, props ) {
@@ -138,11 +137,11 @@ I have added an exception to this rule when dispensing £50. A £50 withdraw req
         return [combination[50].count, combination[20].count, combination[10].count];
       });
       return dispenseTwoTypes[dispenseTwoTypes.length-1];
+
     }
     else{
       return possibleNoteCombinations[0];
     }
-
   },
 
   /**
@@ -222,7 +221,7 @@ I have added an exception to this rule when dispensing £50. A £50 withdraw req
    */
   getBalanceMessage( props ) {
     const { user } = props.atmData;
-    return `${user.name}, your current balance account is £${user.accountBalance}`;
+    return `${user.name}, your current balance account is £${user.accountBalance.toLocaleString()}`;
   },
 
   /**

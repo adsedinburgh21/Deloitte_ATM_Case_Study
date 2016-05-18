@@ -45,7 +45,7 @@ export default class Withdraw extends Component {
       this.props.handleShowValidation();
     }
   }
-
+  
   // Handle when the change event is fired, on the input field
   handleChange( event ) {
     const amount = Number( event.target.value );
@@ -63,6 +63,7 @@ export default class Withdraw extends Component {
     if ( typeof amount !== 'number' ) {
       return;
     }
+    console.log("handleKeyUp method")
     this.props.isWithdrawValid( amount );
   }
 
