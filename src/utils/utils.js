@@ -221,7 +221,7 @@ I have added an exception to this rule when dispensing £50. A £50 withdraw req
    */
   getBalanceMessage( props ) {
     const { user } = props.atmData;
-    return `${user.name}, your current balance account is £${user.accountBalance.toLocaleString()}`;
+    return `${user.name}, your current balance account is ${user.accountBalance.toLocaleString('gbr-GBR', { style: 'currency', currency: 'GBP' })}`;
   },
 
   /**
