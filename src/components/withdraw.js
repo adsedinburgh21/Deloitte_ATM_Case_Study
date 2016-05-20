@@ -63,7 +63,6 @@ export default class Withdraw extends Component {
     if ( typeof amount !== 'number' ) {
       return;
     }
-    console.log("handleKeyUp method")
     this.props.isWithdrawValid( amount );
   }
 

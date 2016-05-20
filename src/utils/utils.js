@@ -28,6 +28,24 @@ const Utils = {
   },
 
   /**
+  * getAvailableNotes - checks what type of notes are available to be dispensed
+  *
+  * @param  {Object} notesContainer - Object of objects containing the count for each note
+  * return {Array} - array with the value of the notes in the ATM eg. [10,50]
+  */
+  getAvailableNotes( notesContainer ){
+    let atmStock = Object.keys(notesContainer).filter( function(note){
+      if( notesContainer[note].count > 0){
+        return note;
+      }
+    })
+    if(atmStock.length === 0){
+      atmStock.push("No available notes");
+    }
+    return atmStock;
+  },
+
+  /**
    * isAnyMoneyLeft - checks if an amount is bigger than another
    *
    * @param  {Number} totalMoney - Initial amount
@@ -60,16 +78,18 @@ const Utils = {
    * so an error can be returned for the availability validation.
    *
    */
-  areAnyNotesLeft( withdraw, notesContainer ) {
-    for(  let i=0; i <= notesContainer[50].count; i++){
-      for(  let j=0; j <= notesContainer[20].count; j++){
-        for(  let k=0; k <= notesContainer[10].count; k++){
-          if( i*50 + j*20 + k*10 === parseInt(withdraw.value) ){
-            return true;
+  areAnyNotesLeft( withdraw, notesContainer ) { 
+    if(this.getSumCountNotes(notesContainer) >= parseInt(withdraw.value) ){
+      for(  let i=0; i <= notesContainer[50].count; i++){
+        for(  let j=0; j <= notesContainer[20].count; j++){
+          for(  let k=0; k <= notesContainer[10].count; k++){
+            if( i*50 + j*20 + k*10 === parseInt(withdraw.value) ){
+              return true;
+            };
           };
-        }
-      }
-    }
+        };
+      };
+    };
     return false;
   },
 
@@ -101,7 +121,7 @@ I have added an exception to this rule when dispensing £50. A £50 withdraw req
     for( i=0; i < (props.atmData.notesContainer[50].count + 1); i++){
       for( j=0; j < (props.atmData.notesContainer[20].count + 1); j++){
         for( k=0; k < (props.atmData.notesContainer[10].count + 1); k++){
-          if( (i*50 + j*20 + k*10) === withdraw){
+          if( (i*50 + j*20 + k*10) === parseInt(withdraw) ){
             possibleNoteCombinations.push( 
               { 50: { count: i }, 20: { count: j }, 10: { count: k } }
             );
@@ -154,13 +174,13 @@ I have added an exception to this rule when dispensing £50. A £50 withdraw req
    * @return {Object} - Object containing the new amount of each note
    */
   subtractCountFromTotal( withdrawnNotes, availableNotes ) {
-    const notes50Used = _.get( withdrawnNotes, '50' );
-    const notes20Used = _.get( withdrawnNotes, '20' );
-    const notes10Used = _.get( withdrawnNotes, '10' );
+    const notes50Used = _.get( withdrawnNotes, '50', 0 );
+    const notes20Used = _.get( withdrawnNotes, '20', 0 );
+    const notes10Used = _.get( withdrawnNotes, '10', 0 );
 
-    const notes50available = _.get( availableNotes, '50' );
-    const notes20available = _.get( availableNotes, '20' );
-    const notes10available = _.get( availableNotes, '10' );
+    const notes50available = _.get( availableNotes, '50', 0 );
+    const notes20available = _.get( availableNotes, '20', 0 );
+    const notes10available = _.get( availableNotes, '10', 0 );
 
     return {
       50: {
@@ -186,10 +206,10 @@ I have added an exception to this rule when dispensing £50. A £50 withdraw req
   getValidationMessage( validationObject ) {
     const validationMsg = {
       notesError: 'There is only notes of £10, £20 and £50',
-      notesAvailability: 'The only available notes at this time are  ',
+      notesAvailability: `Sorry, the only notes currenty available are £: ${validationObject.displayAvailableNotes}`,
       rangeError: 'Only withdraws between £300 and £10',
-      amountError: `Sorry, but the availability is £${validationObject.totalMoney}`,
-      balanceError: `Sorry, but your balance is £${validationObject.userMethod}`,
+      amountError: `Sorry, but the availability is ${validationObject.totalMoney}`,
+      balanceError: `Sorry, but your balance is ${validationObject.userMethod}`,
       withdrawError: 'You are not providing a valid withdraw',
       withdrawValidMsg: 'We are dealing with your request'
     };
@@ -247,14 +267,15 @@ I have added an exception to this rule when dispensing £50. A £50 withdraw req
    * @return {String} - Notes values
    */
   displayWithdrawnCount( withdrawnNotes ) {
-    if ( withdrawnNotes[ '10' ] === undefined ) {
+    if ( typeof withdrawnNotes['10'] === "undefined" ) {
       return;
     }
-    let textResult = '';
+    let textResult = [];
     _.forOwn( withdrawnNotes, ( value, key ) => {
-      textResult += `key=${key} value=${value.count}`;
+      textResult.push(`£${key} x ${value.count}`);
     });
-    return textResult;
+    let result = textResult.join(", ");
+    return result;
   }
 };
 

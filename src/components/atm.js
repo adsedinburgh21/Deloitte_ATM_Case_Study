@@ -162,6 +162,7 @@ export default class Atm extends Component {
     const { accountBalance } = this.state.user;
     const { minWithdraw, maxWithdraw, notesContainer } = this.state;
     const totalMoney = Utils.getSumCountNotes( notesContainer );
+    const displayAvailableNotes = Utils.getAvailableNotes( notesContainer );
 
     return [
       {
@@ -183,17 +184,18 @@ export default class Atm extends Component {
        */
       {
         condition: !Utils.areAnyNotesLeft( withdraw, notesContainer ),
-        message: 'notesAvailability'
+        message: 'notesAvailability',
+        displayAvailableNotes: displayAvailableNotes
       },
       {
         condition: !Utils.isAnyMoneyLeft( accountBalance, amount ),
         message: 'balanceError',
-        userMethod: accountBalance
+        userMethod: accountBalance.toLocaleString('gbr-GBR', { style: 'currency', currency: 'GBP' })
       },
       {
         condition: !Utils.isAnyMoneyLeft( totalMoney, amount ),
         message: 'amountError',
-        totalMoney: totalMoney
+        totalMoney: totalMoney.toLocaleString('gbr-GBR', { style: 'currency', currency: 'GBP' })
       }
     ];
   }
@@ -251,7 +253,6 @@ export default class Atm extends Component {
    * @return {Object} - New Component's state
    */
   calculateWithdrawnNotes( withdraw, props ) {
-    console.log("here!")
     const withdrawnNotes = Utils.calculateCountNotes( withdraw, props );
     const availableNotes = props.atmData.notesContainer;
 
